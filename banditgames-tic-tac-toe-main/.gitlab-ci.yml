@@ -1,0 +1,32 @@
+stages:
+  - package
+
+variables:
+  IMAGE_NAME: registry.gitlab.com/kdg-ti/inf-curriculum/domain-integration/integration-5/2025-2026/team13/banditgames-tic-tac-toe
+
+package:
+  stage: package
+  image: docker:27
+  services:
+    - docker:27-dind
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - |
+      docker build \
+        --build-arg VITE_BACKEND_URL=$VITE_BACKEND_URL \
+        --build-arg VITE_BACKEND_PLATFORM_URL=$VITE_BACKEND_PLATFORM_URL \
+        --build-arg VITE_KC_URL=$VITE_KC_URL \
+        --build-arg VITE_KC_REALM=$VITE_KC_REALM \
+        --build-arg VITE_KC_CLIENT_ID=$VITE_KC_CLIENT_ID \
+        -t ${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA} .
+    - docker tag ${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA} ${IMAGE_NAME}:latest
+    - docker push ${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}
+    - docker push ${IMAGE_NAME}:latest
+
+
+  only:
+    - main

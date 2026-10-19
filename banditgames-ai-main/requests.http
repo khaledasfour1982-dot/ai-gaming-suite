@@ -1,0 +1,47 @@
+### GET request to example server
+POST https://localhost:8039/game/move
+Content-Type: application/json
+Accept: application/json
+###
+
+POST http://localhost:8000/api/game/move
+Content-Type: application/json
+
+{
+  "game_session_id": "eda2be88-71fb-4593-b45a-38e37e4dc755",
+  "player_id": "f243883d-cd0f-40f5-bdd8-d19755db4c52",
+  "move": {
+    "row": 1,
+    "col":2
+  }
+}
+
+###
+POST http://localhost:8000/api/session/start
+Content-Type: application/json
+
+{
+  "game_session_id": "eda2be88-71fb-4593-b45a-38e37e4dc755",
+  "player1_id": "f243883d-cd0f-40f5-bdd8-d19755db4c52",
+  "player2_id": null,
+  "vs_ai": true,
+  "ai_difficulty": "HARD"
+}
+
+###
+POST http://localhost:8001/api/sim/simulate
+Content-Type: application/json
+
+{
+  "iterations": 200,
+  "x_difficulty": "HARD",
+  "o_difficulty": "HARD"
+}
+
+### EASY VS EASY | easy vs easy
+
+
+
+
+
+#hard vs hard

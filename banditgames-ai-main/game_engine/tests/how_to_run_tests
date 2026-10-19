@@ -1,0 +1,12 @@
+➕ Helpful Options
+▶️ Verbose mode
+pytest -v
+
+▶️ Show print statements
+pytest -s
+
+▶️ Stop on first failure
+pytest -x
+
+▶️ Run tests in a specific file
+pytest tests/test_rules_winner.py

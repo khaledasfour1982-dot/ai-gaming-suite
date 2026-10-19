@@ -1,0 +1,22 @@
+artifact_path: file:///C:/Users/A/PycharmProjects/banditgames-ai/ML_winning_probability/mlruns/1/models/m-136021e98fa04982a264f55ef7c39662/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.0
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.5.1
+mlflow_version: 3.7.0
+model_id: m-136021e98fa04982a264f55ef7c39662
+model_size_bytes: 1238846
+model_uuid: m-136021e98fa04982a264f55ef7c39662
+prompts: null
+run_id: bf8ac3500b84438d8fbfc4e813b99987
+utc_time_created: '2025-12-09 16:30:57.537095'

@@ -1,0 +1,22 @@
+Objective
+Two players take turns marking spaces on a 3×3 grid. One player uses X, the other uses O. The goal is to be the first to get three of your marks in a row horizontally, vertically, or diagonally.
+
+Setup
+Start with an empty 3×3 grid. Decide who is X and who is O. X always goes first.
+
+Turns
+Players alternate turns. On your turn, place your mark (X or O) in any empty square. You cannot play on an occupied square.
+
+Winning
+You win if you have three of your marks in a straight line:
+- Any of the three rows
+- Any of the three columns
+- Either of the two diagonals
+
+Draw
+The game is a draw if all nine squares are filled and neither player has three in a row.
+
+Basic strategy tips
+- Try to play in the center when possible.
+- Block your opponent if they already have two in a row.
+- Create “forks” where you threaten two winning lines at once.

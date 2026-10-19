@@ -1,0 +1,3 @@
+model,best_params,cv_mse
+Ridge,{'model__alpha': 10.0},0.10257371620579551
+RandomForest,"{'model__max_depth': 8, 'model__min_samples_leaf': 1, 'model__n_estimators': 200}",0.05785446670226037

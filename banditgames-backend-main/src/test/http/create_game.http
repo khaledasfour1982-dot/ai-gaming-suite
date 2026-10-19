@@ -1,0 +1,8 @@
+### Create a new game
+POST http://localhost:8080/games
+Content-Type: application/json
+
+{
+  "name": "Connect Four",
+  "description": "A classic two-player connection game where players aim to align four tokens in a row."
+}

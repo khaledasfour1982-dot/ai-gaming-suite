@@ -1,0 +1,30 @@
+.boardCell {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-height: 0;
+    border-radius: 0.75rem !important;
+    border: 2px solid rgba(148, 163, 184, 0.4) !important;
+    background: linear-gradient(135deg, #0f172a, #020617) !important;
+    color: #f8fafc !important;
+    font-size: clamp(2rem, 6vw, 3.5rem) !important;
+    font-weight: 700 !important;
+    padding: 0 !important;
+    transition: transform 0.15s ease, border-color 0.15s ease !important;
+
+    &:hover:not(:disabled) {
+        border-color: #38bdf8 !important;
+        transform: translateY(-3px);
+        background: linear-gradient(135deg, #1a2332, #0a0f1a) !important;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    &:focus-visible {
+        outline: 3px solid #38bdf8 !important;
+    }
+}
+

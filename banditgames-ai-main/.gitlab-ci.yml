@@ -1,0 +1,114 @@
+stages:
+  - test
+  - deploy
+
+test_game_engine:
+  stage: test
+  image: python:3.12
+  before_script:
+    - apt-get update -qq && apt-get install -y docker.io
+    - pip install --user --upgrade pip
+    - pip install --user -r requirements.txt
+  script:
+    - python -m pytest game_engine/tests/ -v --junitxml=pytest.xml
+  rules:
+    - when: on_success
+  artifacts:
+    reports:
+      junit: pytest.xml
+    paths:
+      - pytest.xml
+    expire_in: 1 week
+    when: always
+  cache:
+    paths:
+      - ~/.cache/pip
+
+
+deploy_game_engine:
+  stage: deploy
+  image: docker:27
+  services:
+    - docker:27-dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build -f game_engine/Dockerfile -t "$CI_REGISTRY_IMAGE/game-engine:$CI_COMMIT_SHORT_SHA" .
+    - docker push "$CI_REGISTRY_IMAGE/game-engine:$CI_COMMIT_SHORT_SHA"
+    - docker tag "$CI_REGISTRY_IMAGE/game-engine:$CI_COMMIT_SHORT_SHA" "$CI_REGISTRY_IMAGE/game-engine:latest"
+    - docker push "$CI_REGISTRY_IMAGE/game-engine:latest"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+deploy_ai_player:
+  stage: deploy
+  image: docker:27
+  services:
+    - docker:27-dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build -f ai/Dockerfile -t "$CI_REGISTRY_IMAGE/ai:$CI_COMMIT_SHORT_SHA" .
+    - docker push "$CI_REGISTRY_IMAGE/ai:$CI_COMMIT_SHORT_SHA"
+    - docker tag "$CI_REGISTRY_IMAGE/ai:$CI_COMMIT_SHORT_SHA" "$CI_REGISTRY_IMAGE/ai:latest"
+    - docker push "$CI_REGISTRY_IMAGE/ai:latest"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+deploy_chatbot:
+  stage: deploy
+  image: docker:27
+  services:
+    - docker:27-dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build -f chatbot/Dockerfile -t "$CI_REGISTRY_IMAGE/chatbot:$CI_COMMIT_SHORT_SHA" .
+    - docker push "$CI_REGISTRY_IMAGE/chatbot:$CI_COMMIT_SHORT_SHA"
+    - docker tag "$CI_REGISTRY_IMAGE/chatbot:$CI_COMMIT_SHORT_SHA" "$CI_REGISTRY_IMAGE/chatbot:latest"
+    - docker push "$CI_REGISTRY_IMAGE/chatbot:latest"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+deploy_winprob:
+  stage: deploy
+  image: docker:27
+  services:
+    - docker:27-dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build -f ML_winning_probability/Dockerfile -t "$CI_REGISTRY_IMAGE/winprob-api:$CI_COMMIT_SHORT_SHA" .  # ← ZMIENIONE!
+    - docker push "$CI_REGISTRY_IMAGE/winprob-api:$CI_COMMIT_SHORT_SHA"
+    - docker tag "$CI_REGISTRY_IMAGE/winprob-api:$CI_COMMIT_SHORT_SHA" "$CI_REGISTRY_IMAGE/winprob-api:latest"
+    - docker push "$CI_REGISTRY_IMAGE/winprob-api:latest"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+deploy_policy_imitator:
+  stage: deploy
+  image: docker:27
+  services:
+    - docker:27-dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build -f policy_imitator/Dockerfile -t "$CI_REGISTRY_IMAGE/policy_imitator:$CI_COMMIT_SHORT_SHA" .
+    - docker push "$CI_REGISTRY_IMAGE/policy_imitator:$CI_COMMIT_SHORT_SHA"
+    - docker tag "$CI_REGISTRY_IMAGE/policy_imitator:$CI_COMMIT_SHORT_SHA" "$CI_REGISTRY_IMAGE/policy_imitator:latest"
+    - docker push "$CI_REGISTRY_IMAGE/policy_imitator:latest"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+container_scanning:
+  stage: deploy
+  variables:
+    CS_IMAGE: "$CI_REGISTRY_IMAGE/chatbot:$CI_COMMIT_SHORT_SHA"
+  needs:
+    - deploy_game_engine
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+include:
+  - template: Jobs/Container-Scanning.gitlab-ci.yml

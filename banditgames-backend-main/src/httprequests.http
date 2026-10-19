@@ -1,0 +1,16 @@
+POST http://localhost:8044/api/game/move
+Content-Type: application/json
+Accept: application/json
+
+{
+  "board": [
+    ["X", "O", ""],
+    ["", "X", ""],
+    ["O", "", ""]
+  ],
+  "currentPlayer": "X",
+  "move": {
+    "row": 0,
+    "col": 2
+  }
+}
